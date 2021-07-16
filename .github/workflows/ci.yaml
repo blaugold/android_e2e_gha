@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  ci:
+    runs-on: macos-10.15
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      
+      - run: brew install coreutils
+
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 22
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -logcat *:d
+          script: flutter test -v -d emulator integration_test/smoke_test.dart
